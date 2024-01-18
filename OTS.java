@@ -1,6 +1,8 @@
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
+import java.util.ArrayList;
+import java.util.List;
 /**
  * Write a description of class OTS here.
  *
@@ -14,8 +16,8 @@ public class OTS
     public boolean isLoggedIn;
     private User currentUser;
     private Map<String, User> userDatabase;
+    private List<Event> eventList;
     
-    // Placeholder data for testing
     
     
         /**
@@ -26,7 +28,9 @@ public class OTS
         isLoggedIn = false;
         currentUser = null;
         userDatabase = new HashMap<>();
-        
+        eventList = new ArrayList<>();
+
+        createEvents();
     }
     
     public void displayMenu(){
@@ -36,7 +40,8 @@ public class OTS
             System.out.println("1. See Tickets");
             System.out.println("2. Cancel Tickets");
             System.out.println("3. See Events");
-            System.out.println("4. Log Out");
+            System.out.println("4. Buy Tickets");
+             System.out.println("5. Log Out");
         } else {
             System.out.println("");
             System.out.println("Hello Welcome to Online Ticketing System");
@@ -69,14 +74,26 @@ public class OTS
             return;
         }
 
-        // Create a new ProfileInfo for the user
         System.out.println("Enter your email: ");
         String email = scanner.nextLine();
-        System.out.println("Enter your address: ");
-        String addressStreet = scanner.nextLine();
-        // Add other profile information prompts as needed
 
-        ProfileInfo profileInfo = new ProfileInfo(email, addressStreet, 0, "", 0);
+        System.out.println("Enter your address street: ");
+        String addressStreet = scanner.nextLine();
+
+        System.out.println("Enter your house number: ");
+        int houseNumber = scanner.nextInt();
+
+        // Consume the newline character
+        scanner.nextLine();
+
+        System.out.println("Enter your postal code: ");
+        String postalCode = scanner.nextLine();
+
+        System.out.println("Enter your contact number: ");
+        int contactNumber = scanner.nextInt();
+
+        // Create a new ProfileInfo for the user
+        ProfileInfo profileInfo = new ProfileInfo(email, addressStreet, houseNumber, postalCode, contactNumber);
 
         // Create a new User object with the provided information
         User newUser = new User(newUsername, newPassword, userDatabase.size() + 1, profileInfo);
@@ -84,7 +101,28 @@ public class OTS
         // Add the new user to the database
         userDatabase.put(newUsername, newUser);
 
-        System.out.println("Sign up successful!");
+        System.out.println("Sign up successful!\n");
+    }
+
+    public void seeEvents() {
+        System.out.println("Available Events:");
+        for (int i = 0; i < eventList.size(); i++) {
+            Event event = eventList.get(i);
+            System.out.println((i + 1) + ". " + event.getEventName());
+            System.out.println("   Details: " + event.getEventDetails());
+            System.out.println("   Start Date: " + event.getStartDate());
+            System.out.println("   End Date: " + event.getEndDate());
+            System.out.println("   Available Seats: " + event.getAvailableSeats());
+            System.out.println("   Seating Arrangement:");
+            System.out.println("Free seats - f, Sold seats - s, Reserved seats - r"); 
+            System.out.println(""); 
+            displaySeatingArrangement(event);
+            System.out.println("");  // Empty line after each event
+            
+        }
+
+        // Add logic to allow the user to select an event and perform actions
+        // such as purchasing tickets, etc.
     }
     
     public void LogIn(){
@@ -116,13 +154,18 @@ public class OTS
         System.out.println("Logged out successfully.");
     }
     
-    public void SeeTickets(){
+    public void SeeTickets() {
         if (isLoggedIn) {
             // Placeholder for displaying user's tickets
             System.out.println("Displaying tickets for user: " + currentUser.getUsername());
-            String[] tickets = currentUser.getTickets();
-            for (String ticket : tickets) {
-                System.out.println(ticket);
+            List<Ticket> tickets = currentUser.getTickets();
+        
+            if (tickets.isEmpty()) {
+                System.out.println("No tickets purchased.");
+            } else {
+                for (Ticket ticket : tickets) {
+                    System.out.println(ticket);
+                }
             }
         } else {
             System.out.println("You need to log in first.");
@@ -139,10 +182,142 @@ public class OTS
     
     }
     
-    public void SeeEvents(){
-         // Placeholder for displaying events
-        System.out.println("Displaying events...");
+    
+    private void createEvents() {
+        Date startDate1 = new Date(2024, 1, 18);
+        Date endDate1 = new Date(2024, 1, 28);
+        Event event1 = new Event("Ariana Grande Concert", "Concert in O2 Arena", startDate1, endDate1, 50);
+
+        Date startDate2 = new Date(2024, 2, 13);
+        Date endDate2 = new Date(2024, 2, 26);
+        Event event2 = new Event("Travis Scott Concert", "Concert in Wembley Stadium", startDate2, endDate2, 50);
+        
+        Date startDate3 = new Date(2024, 2, 13);
+        Date endDate3= new Date(2024, 2, 30);
+        Event event3 = new Event("Billie Eilish World Tour ", "Billie Eilish World Tour Europe Take over", startDate3, endDate3, 50);
+        
+        Date startDate4 = new Date(2024, 2, 10);
+        Date endDate4 = new Date(2024, 2,17 );
+        Event event4 = new Event("Tamir B ", "Mongolian hip hop artist from USA, Kansas", startDate4, endDate4, 50);
+        
+        Date startDate5 = new Date(2024, 2, 13);
+        Date endDate5 = new Date(2024, 2, 15);
+        Event event5 = new Event("Some random asian guy", "Some where in China Town i guess", startDate5, endDate5, 50);
+        
+        eventList.add(event1);
+        eventList.add(event2);
+        eventList.add(event3);
+        eventList.add(event4);
+        eventList.add(event5);
     }
     
+    private void displaySeatingArrangement(Event event) {
+        int totalRows = event.getTotalRows();
+        int totalSeatsPerRow = event.getTotalSeats(); // Updated line
 
+        for (int row = 1; row <= totalRows; row++) {
+            for (int seat = 1; seat <= totalSeatsPerRow; seat++) { // Updated line
+                String status = event.getSeatStatus(row, seat);
+                String seatStatusChar;
+
+                switch (status) {
+                    case "free":
+                        seatStatusChar = "f";
+                        break;
+                    case "sold":
+                        seatStatusChar = "s";
+                        break;
+                    case "reserved":
+                        seatStatusChar = "r";
+                        break;
+                    default:
+                        seatStatusChar = "?";  // Handle unknown status
+                }
+
+                System.out.print("[" + row + "-" + seat + ": " + seatStatusChar + "] ");
+            }
+            System.out.println();  // Move to the next row
+        }
+    }
+
+
+   public void addTicket() {
+        Scanner scanner = new Scanner(System.in);
+
+        // Display available events
+        seeEvents();
+
+        // Ask user to choose an event
+        System.out.println("Enter the number of the event you want to attend: ");
+        int eventChoice = scanner.nextInt();
+
+        // Validate event choice
+        if (eventChoice >= 1 && eventChoice <= eventList.size()) {
+            Event selectedEvent = eventList.get(eventChoice - 1);
+
+            // Display pricing information for the selected event
+            System.out.println("Event: " + selectedEvent.getEventName());
+            System.out.println("Pricing Information:");
+
+            for (int row = 1; row <= selectedEvent.getTotalRows(); row++) {
+                System.out.println("Row " + row + ": $" + selectedEvent.getPriceForRow(row));
+            }
+
+            // Ask user to choose a seat
+            System.out.println("Enter the row number: ");
+            int selectedRow = scanner.nextInt();
+
+            System.out.println("Enter the seat number: ");
+            int selectedSeat = scanner.nextInt();
+
+            // Purchase the ticket
+            selectedEvent.purchaseTicket(selectedRow, selectedSeat);
+
+            // Add the purchased ticket to the user's profile
+            currentUser.addTicket(selectedEvent.getEventName(), selectedRow, selectedSeat);
+        } else {
+            System.out.println("Invalid event choice.");
+        }
+    }
+
+    public void buyTickets() {
+        Scanner scanner = new Scanner(System.in);
+
+        // Display available events
+        seeEvents();
+
+        // Ask the user to choose an event
+        System.out.println("Enter the number of the event you want to attend: ");
+        int eventChoice = scanner.nextInt();
+
+        // Validate the event choice
+        if (eventChoice >= 1 && eventChoice <= eventList.size()) {
+            Event selectedEvent = eventList.get(eventChoice - 1);
+
+            // Display pricing information for the selected event
+            System.out.println("Event: " + selectedEvent.getEventName());
+            System.out.println("Pricing Information:");
+
+            for (int row = 1; row <= selectedEvent.getTotalRows(); row++) {
+                System.out.println("Row " + row + ": $" + selectedEvent.getPriceForRow(row));
+            }
+
+            // Ask the user to choose a seat
+            System.out.println("Enter the row number: ");
+            int selectedRow = scanner.nextInt();
+
+            System.out.println("Enter the seat number: ");
+            int selectedSeat = scanner.nextInt();
+
+            // Purchase the ticket
+            selectedEvent.purchaseTicket(selectedRow, selectedSeat);
+
+            // Add the purchased ticket to the user's profile
+            currentUser.addTicket(selectedEvent.getEventName(), selectedRow, selectedSeat);
+        } else {
+            System.out.println("Invalid event choice.");
+        }
+    }
+    
+    
 }

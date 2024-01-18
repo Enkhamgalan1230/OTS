@@ -1,0 +1,13 @@
+#BlueJ class context
+comment0.target=Ticket
+comment1.params=eventName\ row\ seat
+comment1.target=Ticket(java.lang.String,\ int,\ int)
+comment2.params=
+comment2.target=java.lang.String\ getEventName()
+comment3.params=
+comment3.target=int\ getRow()
+comment4.params=
+comment4.target=int\ getSeat()
+comment5.params=
+comment5.target=java.lang.String\ toString()
+numComments=6

@@ -6,11 +6,11 @@
  * @version (a version number or a date)
  */
 public class ProfileInfo {
-    String email;
-    String addressStreet;
-    int contactNumber;
-    String postCode;
-    int houseNumber;
+    private String email;
+    private String addressStreet;
+    private int houseNumber;
+    private String postCode;
+    private int contactNumber;
 
     /**
      * Constructor for objects of class ProfileInfo

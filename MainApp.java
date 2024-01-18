@@ -1,4 +1,3 @@
-
 import java.util.Scanner;
 
 public class MainApp {
@@ -18,38 +17,47 @@ public class MainApp {
                 switch (choice) {
                     case 1:
                         if (!onlineTicketingSystem.isLoggedIn) {
-                            onlineTicketingSystem.SignUp();  // Use SignUp() instead of signUp()
+                            onlineTicketingSystem.SignUp();
                         } else {
-                            onlineTicketingSystem.SeeTickets();  // Use SeeTickets() instead of seeTickets()
+                            onlineTicketingSystem.SeeTickets();
                         }
                         break;
                     case 2:
                         if (!onlineTicketingSystem.isLoggedIn) {
-                            onlineTicketingSystem.LogIn();  // Use LogIn() instead of logIn()
+                            onlineTicketingSystem.LogIn();
                         } else {
-                            onlineTicketingSystem.CancelTickets();  // Use CancelTickets() instead of cancelTickets()
+                            onlineTicketingSystem.CancelTickets();
                         }
                         break;
                     case 3:
                         if (!onlineTicketingSystem.isLoggedIn) {
                             isRunning = false;
                         } else {
-                            onlineTicketingSystem.SeeEvents();  // Use SeeEvents() instead of SeeEvents()
+                            onlineTicketingSystem.seeEvents(); 
                         }
                         break;
                     case 4:
                         if (onlineTicketingSystem.isLoggedIn) {
-                            onlineTicketingSystem.logOut();  // Use logOut() instead of logOut()
+                            onlineTicketingSystem.buyTickets();  
+                        } else {
+                            System.out.println("You need to log in first.");
+                        }
+                        break;
+
+                    case 5:
+                        if (onlineTicketingSystem.isLoggedIn) {
+                            onlineTicketingSystem.logOut();
                             System.out.println("Logged out successfully.");
                         }
                         break;
+
                     default:
-                        System.out.println("Invalid choice. Please try again.");
+                        System.out.println("Invalid choice. Please enter a number between 1 and 4.");
                         break;
                 }
             } else {
-                System.out.println("Invalid input. Please enter a number.");
-                scanner.next();
+                System.out.println("Invalid input. Please enter a number between 1 and 4.");
+                scanner.next();  // Consume the invalid input
             }
         }
     }
