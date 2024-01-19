@@ -1,6 +1,6 @@
 import java.util.Random;
 
-public class Event {
+public class Event  {
     private String eventName;
     private String eventDetails;
     private Date startDate;
@@ -8,7 +8,9 @@ public class Event {
     private int totalSeats;
     private String[][] seatStatus;
     private Random random;
-    private double[] rowPrices;     
+    private double[] rowPrices;
+    private boolean discountApplied;
+    private double discountPercentage;
     /**
      * Constructor for objects of class Event
      */
@@ -19,6 +21,7 @@ public class Event {
         this.endDate = endDate;
         this.totalSeats = totalSeats;
         this.seatStatus = new String[5][10];
+        
         
         
         // Initialize seatStatus array (all seats start as "free")
@@ -57,9 +60,9 @@ public class Event {
         return totalSeats;
     }
 
-    // Helper method for seat validation
-    private boolean isValidSeat(int row, int seat) {
+    public boolean isValidSeat(int row, int seat) {
         return row >= 1 && row <= seatStatus.length && seat >= 1 && seat <= seatStatus[0].length;
+        
     }
 
     // Helper method to randomly reserve seats

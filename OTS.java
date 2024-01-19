@@ -17,7 +17,7 @@ public class OTS
     private User currentUser;
     private Map<String, User> userDatabase;
     private List<Event> eventList;
-    
+    private List<Promotion> promotions;
     
     
         /**
@@ -29,7 +29,8 @@ public class OTS
         currentUser = null;
         userDatabase = new HashMap<>();
         eventList = new ArrayList<>();
-
+        promotions = new ArrayList<>();
+        createPromotions();
         createEvents();
     }
     
@@ -302,22 +303,83 @@ public class OTS
                 System.out.println("Row " + row + ": $" + selectedEvent.getPriceForRow(row));
             }
 
-            // Ask the user to choose a seat
-            System.out.println("Enter the row number: ");
-            int selectedRow = scanner.nextInt();
+            // Display available promotions
+            displayPromotions();
 
-            System.out.println("Enter the seat number: ");
-            int selectedSeat = scanner.nextInt();
+            // Ask the user to enter a promo code
+            System.out.println("Enter a promo code (or enter 'none' for no promotion):");
+            String promoCode = scanner.next();
 
-            // Purchase the ticket
-            selectedEvent.purchaseTicket(selectedRow, selectedSeat);
+            // Validate the promo code
+            if (!promoCode.equalsIgnoreCase("none")) {
+                applyPromotion(selectedEvent, promoCode);
+            }
 
-            // Add the purchased ticket to the user's profile
-            currentUser.addTicket(selectedEvent.getEventName(), selectedRow, selectedSeat);
+            // Ask the user to choose seats
+            System.out.println("Enter the number of seats you want to purchase: ");
+            int numSeatsToPurchase = scanner.nextInt();
+
+            for (int i = 0; i < numSeatsToPurchase; i++) {
+                System.out.println("Enter the row number for seat " + (i + 1) + ": ");
+                int selectedRow = scanner.nextInt();
+
+                System.out.println("Enter the seat number for seat " + (i + 1) + ": ");
+                int selectedSeat = scanner.nextInt();
+
+                // Purchase the ticket
+                purchaseTicket(selectedEvent, selectedRow, selectedSeat);
+            }
         } else {
             System.out.println("Invalid event choice.");
         }
     }
     
+
+    private void createPromotions() {
+        Promotion promo1 = new Promotion("PROMO1", 10.0);  
+        Promotion promo2 = new Promotion("PROMO2", 15.0);
+        Promotion promo3 = new Promotion("JUSTIN", 20.0);
+        Promotion promo4 = new Promotion("OOSD", 25.0);
+        Promotion promo5 = new Promotion("ENTWAN", 30.0);
+
+        promotions.add(promo1);
+        promotions.add(promo2);
+        promotions.add(promo3);
+        promotions.add(promo4);
+        promotions.add(promo5);
+    }
     
+    public void displayPromotions() {
+        System.out.println("Available Promotions:");
+        for (Promotion promotion : promotions) {
+            System.out.println(promotion.getPromoCode() + ": " + promotion.getDiscount() + "% off");
+        }
+    }
+    
+    private void applyPromotion(Event event, String promoCode) {
+        for (Promotion promotion : promotions) {
+            if (promotion.getPromoCode().equalsIgnoreCase(promoCode)) {
+                double discountPercentage = promotion.getDiscount();
+                double originalPrice = event.getPriceForRow(1);  // Assuming the price is the same for all rows
+                double discountedPrice = originalPrice - (originalPrice * (discountPercentage / 100));
+
+                System.out.println("Promo code applied! Discounted price: $" + discountedPrice);
+                return;
+            }
+        }
+
+        System.out.println("Invalid promo code. No discount applied.");
+    }
+    
+    private void purchaseTicket(Event event, int selectedRow, int selectedSeat) {
+        if (event.isValidSeat(selectedRow, selectedSeat) && event.getSeatStatus(selectedRow, selectedSeat).equals("free")) {
+            double ticketPrice = event.getPriceForRow(selectedRow);
+            // Update seat status and inform the user about the purchase and price
+            event.purchaseTicket(selectedRow, selectedSeat);
+            System.out.println("Ticket purchased successfully for seat " + selectedRow + "-" + selectedSeat);
+            System.out.println("Price: $" + ticketPrice);
+        } else {
+            System.out.println("Seat " + selectedRow + "-" + selectedSeat + " is not available or already reserved/sold.");
+        }
+    }
 }
