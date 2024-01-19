@@ -87,7 +87,7 @@ public class OTS
         // Consume the newline character
         scanner.nextLine();
 
-        System.out.println("Enter your postal code: ");
+        System.out.println("Enter your Post code: ");
         String postalCode = scanner.nextLine();
 
         System.out.println("Enter your contact number: ");
@@ -261,7 +261,7 @@ public class OTS
             System.out.println("Pricing Information:");
 
             for (int row = 1; row <= selectedEvent.getTotalRows(); row++) {
-                System.out.println("Row " + row + ": $" + selectedEvent.getPriceForRow(row));
+                System.out.println("Row " + row + ": £" + selectedEvent.getPriceForRow(row));
             }
 
             // Ask user to choose a seat
@@ -300,7 +300,7 @@ public class OTS
             System.out.println("Pricing Information:");
 
             for (int row = 1; row <= selectedEvent.getTotalRows(); row++) {
-                System.out.println("Row " + row + ": $" + selectedEvent.getPriceForRow(row));
+                System.out.println("Row " + row + ": £" + selectedEvent.getPriceForRow(row));
             }
 
             // Display available promotions
@@ -363,7 +363,7 @@ public class OTS
                 double originalPrice = event.getPriceForRow(1);  // Assuming the price is the same for all rows
                 double discountedPrice = originalPrice - (originalPrice * (discountPercentage / 100));
 
-                System.out.println("Promo code applied! Discounted price: $" + discountedPrice);
+                System.out.println("Promo code applied! Discounted price: £" + discountedPrice);
                 return;
             }
         }
@@ -377,7 +377,7 @@ public class OTS
             // Update seat status and inform the user about the purchase and price
             event.purchaseTicket(selectedRow, selectedSeat);
             System.out.println("Ticket purchased successfully for seat " + selectedRow + "-" + selectedSeat);
-            System.out.println("Price: $" + ticketPrice);
+            System.out.println("Price: £" + ticketPrice);
         } else {
             System.out.println("Seat " + selectedRow + "-" + selectedSeat + " is not available or already reserved/sold.");
         }
