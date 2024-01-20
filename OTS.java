@@ -11,7 +11,6 @@ import java.util.List;
  */
 public class OTS
 {
-    // instance variables - replace the example below with your own
     
     public boolean isLoggedIn;
     private User currentUser;
@@ -32,6 +31,18 @@ public class OTS
         promotions = new ArrayList<>();
         createPromotions();
         createEvents();
+    }
+    
+    public boolean isLoggedIn() {
+        return isLoggedIn;
+    }
+    
+    public User getCurrentUser() {
+        return currentUser;
+    }
+
+    public List<Event> getEventList() {
+        return eventList;
     }
     
     public void displayMenu(){
@@ -58,7 +69,7 @@ public class OTS
         System.out.println("Enter a username: ");
         String newUsername = scanner.nextLine();
 
-        // Check if the username is available
+        // Checking if the username is available here
         if (userDatabase.containsKey(newUsername)) {
             System.out.println("Username already taken. Please choose another one.");
             return;
@@ -84,7 +95,6 @@ public class OTS
         System.out.println("Enter your house number: ");
         int houseNumber = scanner.nextInt();
 
-        // Consume the newline character
         scanner.nextLine();
 
         System.out.println("Enter your Post code: ");
@@ -93,10 +103,10 @@ public class OTS
         System.out.println("Enter your contact number: ");
         int contactNumber = scanner.nextInt();
 
-        // Create a new ProfileInfo for the user
+        // Creating a new ProfileInfo for the user here
         ProfileInfo profileInfo = new ProfileInfo(email, addressStreet, houseNumber, postalCode, contactNumber);
 
-        // Create a new User object with the provided information
+        // Create a new User object with the provided informations 
         User newUser = new User(newUsername, newPassword, userDatabase.size() + 1, profileInfo);
 
         // Add the new user to the database
@@ -118,12 +128,9 @@ public class OTS
             System.out.println("Free seats - f, Sold seats - s, Reserved seats - r"); 
             System.out.println(""); 
             displaySeatingArrangement(event);
-            System.out.println("");  // Empty line after each event
+            System.out.println("");
             
         }
-
-        // Add logic to allow the user to select an event and perform actions
-        // such as purchasing tickets, etc.
     }
     
     public void LogIn(){
@@ -136,7 +143,7 @@ public class OTS
             System.out.println("Enter your password: ");
             int password = scanner.nextInt();
 
-            // Validate the password
+            // Check if the password matches
             User user = userDatabase.get(username);
             if (user.getPassword() == password) {
                 isLoggedIn = true;
@@ -157,13 +164,13 @@ public class OTS
     
     public void SeeTickets() {
         if (isLoggedIn) {
-            // Placeholder for displaying user's tickets
             System.out.println("Displaying tickets for user: " + currentUser.getUsername());
             List<Ticket> tickets = currentUser.getTickets();
-        
+    
             if (tickets.isEmpty()) {
                 System.out.println("No tickets purchased.");
             } else {
+                System.out.println("Number of tickets: " + tickets.size());
                 for (Ticket ticket : tickets) {
                     System.out.println(ticket);
                 }
@@ -172,15 +179,13 @@ public class OTS
             System.out.println("You need to log in first.");
         }
     }
-    
+
     public void CancelTickets(){
         if (isLoggedIn) {
-            // Placeholder for canceling tickets
             System.out.println("Cancelling tickets for user: " + currentUser.getUsername());
         } else {
             System.out.println("You need to log in first.");
         }
-    
     }
     
     
@@ -214,10 +219,10 @@ public class OTS
     
     private void displaySeatingArrangement(Event event) {
         int totalRows = event.getTotalRows();
-        int totalSeatsPerRow = event.getTotalSeats(); // Updated line
+        int totalSeatsPerRow = event.getTotalSeatsPerRow();
 
         for (int row = 1; row <= totalRows; row++) {
-            for (int seat = 1; seat <= totalSeatsPerRow; seat++) { // Updated line
+            for (int seat = 1; seat <= totalSeatsPerRow; seat++) {
                 String status = event.getSeatStatus(row, seat);
                 String seatStatusChar;
 
@@ -232,23 +237,21 @@ public class OTS
                         seatStatusChar = "r";
                         break;
                     default:
-                        seatStatusChar = "?";  // Handle unknown status
+                        seatStatusChar = "?";
                 }
 
                 System.out.print("[" + row + "-" + seat + ": " + seatStatusChar + "] ");
             }
-            System.out.println();  // Move to the next row
+            System.out.println();
         }
     }
-
-
-   public void addTicket() {
+    
+    public void addTicket() {
         Scanner scanner = new Scanner(System.in);
-
         // Display available events
         seeEvents();
 
-        // Ask user to choose an event
+        // Ask user to choose an event 
         System.out.println("Enter the number of the event you want to attend: ");
         int eventChoice = scanner.nextInt();
 
@@ -360,7 +363,7 @@ public class OTS
         for (Promotion promotion : promotions) {
             if (promotion.getPromoCode().equalsIgnoreCase(promoCode)) {
                 double discountPercentage = promotion.getDiscount();
-                double originalPrice = event.getPriceForRow(1);  // Assuming the price is the same for all rows
+                double originalPrice = event.getPriceForRow(1);
                 double discountedPrice = originalPrice - (originalPrice * (discountPercentage / 100));
 
                 System.out.println("Promo code applied! Discounted price: £" + discountedPrice);
@@ -376,10 +379,86 @@ public class OTS
             double ticketPrice = event.getPriceForRow(selectedRow);
             // Update seat status and inform the user about the purchase and price
             event.purchaseTicket(selectedRow, selectedSeat);
+            currentUser.addTicket(event.getEventName(), selectedRow, selectedSeat); 
             System.out.println("Ticket purchased successfully for seat " + selectedRow + "-" + selectedSeat);
             System.out.println("Price: £" + ticketPrice);
         } else {
             System.out.println("Seat " + selectedRow + "-" + selectedSeat + " is not available or already reserved/sold.");
         }
     }
+    
+    public void cancelTicket() {
+        if (isLoggedIn) {
+            System.out.println("Cancelling tickets for user: " + currentUser.getUsername());
+
+            List<Ticket> tickets = currentUser.getTickets();
+
+            if (tickets.isEmpty()) {
+                System.out.println("No tickets purchased.");
+            } else {
+                // Display user's tickets for selection
+                for (int i = 0; i < tickets.size(); i++) {
+                    System.out.println((i + 1) + ". " + tickets.get(i));
+                }
+
+                // Ask user to choose a ticket
+                Scanner scanner = new Scanner(System.in);
+                System.out.println("Enter the number of the ticket you want to cancel (or enter 0 to cancel nothing): ");
+                int ticketChoice = scanner.nextInt();
+
+                // Validate ticket choice
+                if (ticketChoice >= 0 && ticketChoice <= tickets.size()) {
+                    if (ticketChoice == 0) {
+                    System.out.println("Ticket cancellation aborted.");
+                    } else {
+                        Ticket selectedTicket = tickets.get(ticketChoice - 1);
+
+                        // Retrieve the event by name from the selectedTicket
+                        Event event = getEventByName(selectedTicket.getEventName());
+
+                        if (event != null) {
+                            // Ask for confirmation
+                            System.out.println("Are you sure you want to cancel this ticket? (yes/no)");
+                            String confirmation = scanner.next().toLowerCase();
+
+                            if (confirmation.equals("yes")) {
+                                // Refund and remove the canceled ticket from the user's profile
+                                refundTicket(event, selectedTicket);
+                                currentUser.removeTicket(selectedTicket);
+                                System.out.println("Ticket cancelled successfully.");
+                            } else {
+                                System.out.println("Ticket cancellation aborted.");
+                            }
+                        } else {
+                            System.out.println("Event not found. Refund failed.");
+                        }
+                    }
+                } else {
+                    System.out.println("Invalid ticket choice.");
+                }
+            }
+        } else {
+            System.out.println("You need to log in first.");
+        }
+    }
+
+    private void refundTicket(Event event, Ticket ticket) {
+        int selectedRow = ticket.getRow();
+        int selectedSeat = ticket.getSeat();
+
+        // Refund logic here (e.g., update seat status, refund amount, etc.)
+        event.refundTicket(selectedRow, selectedSeat);
+        double refundAmount = event.getPriceForRow(selectedRow);
+        System.out.println("Refund amount: £" + refundAmount);
+    }    
+    
+    private Event getEventByName(String eventName) {
+        for (Event event : eventList) {
+            if (event.getEventName().equals(eventName)) {
+                return event;
+            }
+        }
+        return null;  // Event not found
+    }
+   
 }

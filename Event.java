@@ -11,6 +11,8 @@ public class Event  {
     private double[] rowPrices;
     private boolean discountApplied;
     private double discountPercentage;
+    private static final int SEATS_PER_ROW = 10;
+    
     /**
      * Constructor for objects of class Event
      */
@@ -65,8 +67,8 @@ public class Event  {
         
     }
 
-    // Helper method to randomly reserve seats
-    private void randomlyReserveSeats(int numSeatsToReserve) {
+    
+    public void randomlyReserveSeats(int numSeatsToReserve) {
         Random random = new Random();
         int reservedSeats = 0;
 
@@ -81,17 +83,16 @@ public class Event  {
         }
     }
 
-    // Helper method to randomly sell seats
-    private void randomlySellSeats(int numSeatsToSell) {
+    public void randomlySellSeats(int numSeatsToSell) {
         Random random = new Random();
         int soldSeats = 0;
 
         while (soldSeats < numSeatsToSell) {
-            int randomRow = random.nextInt(seatStatus.length) + 1;
-            int randomSeat = random.nextInt(seatStatus[0].length) + 1;
+            int randomRow = random.nextInt(seatStatus.length);
+            int randomSeat = random.nextInt(seatStatus[0].length);
 
-            if (seatStatus[randomRow - 1][randomSeat - 1].equals("free")) {
-                seatStatus[randomRow - 1][randomSeat - 1] = "sold";
+            if (seatStatus[randomRow][randomSeat].equals("free")) {
+                seatStatus[randomRow][randomSeat] = "sold";
                 soldSeats++;
             }
         }
@@ -120,17 +121,15 @@ public class Event  {
     }
     
     private void initializeRowPrices() {
-        // For simplicity, let's assume higher row numbers are more expensive
         rowPrices = new double[seatStatus.length];
         for (int row = 0; row < seatStatus.length; row++) {
-            rowPrices[row] = 50.0 + (row * 10.0);  // Adjust the pricing logic as needed
+            rowPrices[row] = 50.0 + (row * 10.0);
         }
     }
     
 
     
      public int getTotalRows() {
-        // Assuming rows are determined by the length of seatStatus
         return seatStatus.length;
     }
 
@@ -146,12 +145,24 @@ public class Event  {
         if (isValidSeat(row, seat) && seatStatus[row - 1][seat - 1].equals("free")) {
             double ticketPrice = getPriceForRow(row);
 
-            // Update seat status and inform the user about the purchase and price
             seatStatus[row - 1][seat - 1] = "sold";
             System.out.println("Ticket purchased successfully for seat " + row + "-" + seat);
             System.out.println("Price: $" + ticketPrice);
         } else {
             System.out.println("Seat " + row + "-" + seat + " is not available or already reserved/sold.");
         }
+    }
+    
+    public void refundTicket(int row, int seat) {
+        if (isValidSeat(row, seat)) {
+            seatStatus[row - 1][seat - 1] = "free";
+            System.out.println("Ticket refunded for seat " + row + "-" + seat);
+        } else {
+            System.out.println("Invalid seat for refund.");
+        }
+    }
+    
+    public int getTotalSeatsPerRow() {
+        return SEATS_PER_ROW;
     }
 }

@@ -57,23 +57,14 @@ public class User
         this.consumerID = consumerID;
     }
     
-    public void addTicket(String ticket) {
-    // Add code to add a ticket to the tickets array
-    }
-
-    public void removeTicket(String ticket) {
-    // Add code to remove a ticket from the tickets array
-    }
-    
     public String toString() {
         return "User [username=" + username + ", password=" + password + ", consumerID=" + consumerID + "]";
     }
     
     public void addTicket(String eventName, int row, int seat) {
-        // Assuming you have a Ticket class to represent individual tickets
-        Ticket newTicket = new Ticket(eventName, row, seat);
-        userTickets.add(newTicket);
-        System.out.println("Ticket added to your profile:\n" + newTicket.toString());
+    Ticket newTicket = new Ticket(eventName, row, seat);
+    userTickets.add(newTicket);
+    System.out.println("Ticket added to your profile:\n" + newTicket.toString());
     }
 
     public List<Ticket> getTickets(Event selectedEvent) {
@@ -83,10 +74,8 @@ public class User
             int row = ticket.getRow();
             int seat = ticket.getSeat();
 
-            // Check the seat status using the getSeatStatus method in the Event class
             String seatStatus = selectedEvent.getSeatStatus(row, seat);
 
-            // Modify the condition to check if seatStatus is "free"
             if (row >= 1 && row <= selectedEvent.getTotalRows() &&
                 seat >= 1 && seat <= selectedEvent.getTotalSeats() &&
                 seatStatus.equals("free")) {
@@ -97,7 +86,13 @@ public class User
         return validTickets;
     }
     
+  
     public List<Ticket> getTickets() {
-    return userTickets;
+        return userTickets;
+    }    
+    
+    public void removeTicket(Ticket ticket) {
+        userTickets.remove(ticket);
     }
+
 }

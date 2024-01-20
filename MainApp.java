@@ -26,7 +26,7 @@ public class MainApp {
                         if (!onlineTicketingSystem.isLoggedIn) {
                             onlineTicketingSystem.LogIn();
                         } else {
-                            onlineTicketingSystem.CancelTickets();
+                            onlineTicketingSystem.cancelTicket();
                         }
                         break;
                     case 3:
