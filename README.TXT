@@ -1,12 +1,10 @@
 ------------------------------------------------------------------------
-This is the project README file. Here, you should describe your project.
-Tell the reader (someone who does not know anything about this project)
-all they need to know. The comments should usually include at least:
+This is the project README file. 
 ------------------------------------------------------------------------
 
-PROJECT TITLE:
-PURPOSE OF PROJECT:
-VERSION or DATE:
-HOW TO START THIS PROJECT:
-AUTHORS:
-USER INSTRUCTIONS:
+PROJECT TITLE: Online Ticketing System
+PURPOSE OF PROJECT: System used for purchasing tickets for various events.
+VERSION or DATE: first version i guess
+HOW TO START THIS PROJECT: Go through codes and run mainApp.java
+AUTHORS: Enkh-Amgalan Enkhbayar
+USER INSTRUCTIONS: Run mainAPP.java 
