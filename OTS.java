@@ -101,7 +101,7 @@ public class OTS
         String postalCode = scanner.nextLine();
 
         System.out.println("Enter your contact number: ");
-        int contactNumber = scanner.nextInt();
+        String contactNumber = scanner.nextLine();
 
         // Creating a new ProfileInfo for the user here
         ProfileInfo profileInfo = new ProfileInfo(email, addressStreet, houseNumber, postalCode, contactNumber);
@@ -119,6 +119,7 @@ public class OTS
         System.out.println("Available Events:");
         for (int i = 0; i < eventList.size(); i++) {
             Event event = eventList.get(i);
+            System.out.println("");
             System.out.println((i + 1) + ". " + event.getEventName());
             System.out.println("   Details: " + event.getEventDetails());
             System.out.println("   Start Date: " + event.getStartDate());
@@ -164,26 +165,32 @@ public class OTS
     
     public void SeeTickets() {
         if (isLoggedIn) {
+            System.out.println("");
             System.out.println("Displaying tickets for user: " + currentUser.getUsername());
             List<Ticket> tickets = currentUser.getTickets();
     
             if (tickets.isEmpty()) {
+                System.out.println("");
                 System.out.println("No tickets purchased.");
             } else {
+                System.out.println("");
                 System.out.println("Number of tickets: " + tickets.size());
                 for (Ticket ticket : tickets) {
                     System.out.println(ticket);
                 }
             }
         } else {
+            System.out.println("");
             System.out.println("You need to log in first.");
         }
     }
 
     public void CancelTickets(){
         if (isLoggedIn) {
+            System.out.println("");
             System.out.println("Cancelling tickets for user: " + currentUser.getUsername());
         } else {
+            System.out.println("");
             System.out.println("You need to log in first.");
         }
     }
@@ -293,7 +300,7 @@ public class OTS
         // Ask the user to choose an event
         System.out.println("Enter the number of the event you want to attend: ");
         int eventChoice = scanner.nextInt();
-
+    
         // Validate the event choice
         if (eventChoice >= 1 && eventChoice <= eventList.size()) {
             Event selectedEvent = eventList.get(eventChoice - 1);
@@ -304,6 +311,21 @@ public class OTS
 
             for (int row = 1; row <= selectedEvent.getTotalRows(); row++) {
                 System.out.println("Row " + row + ": £" + selectedEvent.getPriceForRow(row));
+            }
+
+            // Ask the user to choose seats
+            System.out.println("Enter the number of seats you want to purchase: ");
+            int numSeatsToPurchase = scanner.nextInt();
+
+            // Array to store selected seats
+            int[][] selectedSeats = new int[numSeatsToPurchase][2];
+
+            for (int i = 0; i < numSeatsToPurchase; i++) {
+                System.out.println("Enter the row number for seat " + (i + 1) + ": ");
+                selectedSeats[i][0] = scanner.nextInt();
+
+                System.out.println("Enter the seat number for seat " + (i + 1) + ": ");
+                selectedSeats[i][1] = scanner.nextInt();
             }
 
             // Display available promotions
@@ -318,25 +340,14 @@ public class OTS
                 applyPromotion(selectedEvent, promoCode);
             }
 
-            // Ask the user to choose seats
-            System.out.println("Enter the number of seats you want to purchase: ");
-            int numSeatsToPurchase = scanner.nextInt();
-
+            // Purchase the selected seats
             for (int i = 0; i < numSeatsToPurchase; i++) {
-                System.out.println("Enter the row number for seat " + (i + 1) + ": ");
-                int selectedRow = scanner.nextInt();
-
-                System.out.println("Enter the seat number for seat " + (i + 1) + ": ");
-                int selectedSeat = scanner.nextInt();
-
-                // Purchase the ticket
-                purchaseTicket(selectedEvent, selectedRow, selectedSeat);
+                purchaseTicket(selectedEvent, selectedSeats[i][0], selectedSeats[i][1]);
             }
         } else {
             System.out.println("Invalid event choice.");
         }
     }
-    
 
     private void createPromotions() {
         Promotion promo1 = new Promotion("PROMO1", 10.0);  
@@ -366,11 +377,16 @@ public class OTS
                 double originalPrice = event.getPriceForRow(1);
                 double discountedPrice = originalPrice - (originalPrice * (discountPercentage / 100));
 
+                // Update the price for each row in the event
+                for (int row = 1; row <= event.getTotalRows(); row++) {
+                    event.setPriceForRow(row, discountedPrice);
+                }
+
                 System.out.println("Promo code applied! Discounted price: £" + discountedPrice);
                 return;
             }
         }
-
+    
         System.out.println("Invalid promo code. No discount applied.");
     }
     

@@ -1,7 +1,7 @@
 import java.util.Scanner;
 
 public class MainApp {
-    public static void main(String[] args) {
+    public static void startMenu(String[] args) {
         OTS onlineTicketingSystem = new OTS();
         Scanner scanner = new Scanner(System.in);
         boolean isRunning = true;

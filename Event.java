@@ -165,4 +165,12 @@ public class Event  {
     public int getTotalSeatsPerRow() {
         return SEATS_PER_ROW;
     }
+    
+    public void setPriceForRow(int row, double price) {
+        if (row >= 1 && row <= rowPrices.length) {
+            rowPrices[row - 1] = price;
+        } else {
+            System.out.println("Invalid row number.");
+        }
+    }
 }
