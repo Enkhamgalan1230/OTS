@@ -1,10 +1,4 @@
 
-/**
- * Write a description of class Date here.
- *
- * @author (your name)
- * @version (a version number or a date)
- */
 public class Date {
     int year;
     int month;

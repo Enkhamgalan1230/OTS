@@ -3,12 +3,7 @@ import java.util.Map;
 import java.util.Scanner;
 import java.util.ArrayList;
 import java.util.List;
-/**
- * Write a description of class OTS here.
- *
- * @author (your name)
- * @version (a version number or a date)
- */
+
 public class OTS
 {
     

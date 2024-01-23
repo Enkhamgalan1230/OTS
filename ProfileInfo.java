@@ -1,10 +1,4 @@
 
-/**
- * Write a description of class UserInfo here.
- *
- * @author (your name)
- * @version (a version number or a date)
- */
 public class ProfileInfo {
     private String email;
     private String addressStreet;
